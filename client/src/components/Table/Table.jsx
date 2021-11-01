@@ -6,6 +6,28 @@ let dataJson = require("../../data.json");
 
 function Table() {
   const [modalActive, setModalActive] = useState(false);
+  const [sortActive, setSortActive] = useState(false);
+  let dataPersons = JSON.parse(JSON.stringify(dataJson));
+
+  const a = dataJson
+    .map((el) => {
+      let hoursTimeUser = 0;
+      let minuteTimeUser = 0;
+      el.Days.forEach((l) => {
+        const startTime = l.Start.split("-");
+        const endTime = l.End.split("-");
+        const hours = (Number(startTime[0]) - Number(endTime[0])) * -1;
+        let minutes = Number(startTime[1]) - Number(endTime[1]);
+        if (minutes < 0) {
+          minutes = minutes * -1;
+        }
+        hoursTimeUser += hours;
+        minuteTimeUser += minutes;
+        
+      });
+      return { ...el, max: Math.ceil(hoursTimeUser + minuteTimeUser / 60) };
+    })
+    .sort((a, b) => b.max - a.max);
 
   const [modalData, setModalData] = useState({
     covid: null,
@@ -47,7 +69,6 @@ function Table() {
     setCurrentPage(el);
     setCountResolve(el * 10);
   };
-
   return (
     <>
       <div className={style.main}>
@@ -64,13 +85,40 @@ function Table() {
                   {el}
                 </th>
               ))}
-              <th className={style.rightColumn}>Monthly total</th>
+              <th
+                className={style.rightColumn}
+                onClick={() => setSortActive(!sortActive)}
+              >
+                Monthly total
+              </th>
             </tr>
           </thead>
           <tbody>
-            {dataJson.slice(countResolve - 10, countResolve).map((el, i) => (
-              <PersonRow key={el.id} user={el} index={i} />
-            ))}
+            {sortActive
+              ? a
+                  .slice(countResolve - 10, countResolve)
+                  .map((el, i) => (
+                    <PersonRow
+                      key={el.id}
+                      user={el}
+                      index={i}
+                      sortActive={sortActive}
+                      setSortActive={setSortActive}
+                      dataPersons={dataPersons}
+                    />
+                  ))
+              : dataPersons
+                  .slice(countResolve - 10, countResolve)
+                  .map((el, i) => (
+                    <PersonRow
+                      key={el.id}
+                      user={el}
+                      index={i}
+                      sortActive={sortActive}
+                      setSortActive={setSortActive}
+                      dataPersons={dataPersons}
+                    />
+                  ))}
           </tbody>
         </table>
         <ModalAddItem active={modalActive} setActive={setModalActive}>

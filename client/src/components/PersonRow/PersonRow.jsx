@@ -1,8 +1,9 @@
 import React from "react";
 import style from "../Table/table.module.scss";
 
-function PersonRow({ user }) {
-  const arrayDaysUser = user.Days.map((el) => el);
+function PersonRow({ user, setSortActive, sortActive }) {
+  let arrayDaysUser = user?.Days?.map((el) => el);
+  console.log(user.Fullname)
   let hoursTimeUser = 0;
   let minuteTimeUser = 0;
 
@@ -18,7 +19,7 @@ function PersonRow({ user }) {
   return (
     <tr>
       <td className={style.leftColumn}>{user.Fullname}</td>
-      {arrayDaysUser.map((el) => {
+      {arrayDaysUser.map((el, i, arr) => {
         if (el.Date) {
           const startTime = el.Start.split("-");
           const endTime = el.End.split("-");
@@ -29,13 +30,15 @@ function PersonRow({ user }) {
           }
           hoursTimeUser += hours;
           minuteTimeUser += minutes;
+          user = {
+            ...user,
+            allTime: Math.ceil(hoursTimeUser + minuteTimeUser / 60),
+          };
           return <td key={Math.random()}>{`${hours}h.${minutes}m`}</td>;
         }
         return <td key={Math.random()}>0</td>;
       })}
-      <td className={style.rightColumn}>
-        {Math.ceil(hoursTimeUser + minuteTimeUser / 60)} h.
-      </td>
+      <td className={style.rightColumn}>{user?.allTime} h.</td>
     </tr>
   );
 }
