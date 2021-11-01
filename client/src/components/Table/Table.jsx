@@ -1,13 +1,56 @@
-import React, { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from "react";
 import ModalAddItem from "../ModalAddItem/ModalAddItem";
 import PersonRow from "../PersonRow/PersonRow";
 import style from "./table.module.scss";
-let dataJson = require("../../data.json");
 
 function Table() {
+  let dataJson = require("../../data.json");
   const [modalActive, setModalActive] = useState(false);
   const [sortActive, setSortActive] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
+  const [myData, setMyData] = useState([]);
+  const [modalData, setModalData] = useState({
+    covid: null,
+    el: null,
+  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [countResolve, setCountResolve] = useState(10);
+
+  const countPages = Math.ceil(dataJson.length / 10);
+
   let dataPersons = JSON.parse(JSON.stringify(dataJson));
+  useEffect(() => {
+    setMyData(dataPersons);
+  }, []);
+
+  const inputHandler = (e) => {
+    setSearchInput(e.target.value);
+  };
+
+  const searchPerson = (e) => {
+    e.preventDefault();
+    let ak = [];
+    dataPersons.forEach((el) => {
+      // console.log(el?.Fullname?.split(" ")[0] === searchInput);
+      if (el?.Fullname?.split(" ")[0] === searchInput) {
+        ak.push(el);
+        setSearchInput("");
+      } else if (el?.Fullname?.split(" ")[1] === searchInput) {
+        ak.push(el);
+        setSearchInput("");
+      } else if (el?.Fullname === searchInput) {
+        ak.push(el);
+        setSearchInput("");
+      }
+    });
+    setMyData(ak);
+    paggHandler(1);
+  };
+
+  const newState = () => {
+    setMyData(dataPersons);
+  };
 
   const a = dataJson
     .map((el) => {
@@ -23,20 +66,10 @@ function Table() {
         }
         hoursTimeUser += hours;
         minuteTimeUser += minutes;
-        
       });
       return { ...el, max: Math.ceil(hoursTimeUser + minuteTimeUser / 60) };
     })
     .sort((a, b) => b.max - a.max);
-
-  const [modalData, setModalData] = useState({
-    covid: null,
-    el: null,
-  });
-  const [currentPage, setCurrentPage] = useState(1);
-  const [countResolve, setCountResolve] = useState(10);
-
-  const countPages = Math.ceil(dataJson.length / 10);
 
   const arrayPages = [];
   for (let i = 1; i <= countPages; i++) {
@@ -75,7 +108,7 @@ function Table() {
         <table>
           <thead>
             <tr>
-              <th>Name</th>
+              <th onClick={newState}>Name</th>
               {monthDay.map((el) => (
                 <th
                   className={style.modd}
@@ -107,7 +140,7 @@ function Table() {
                       dataPersons={dataPersons}
                     />
                   ))
-              : dataPersons
+              : myData
                   .slice(countResolve - 10, countResolve)
                   .map((el, i) => (
                     <PersonRow
@@ -121,6 +154,12 @@ function Table() {
                   ))}
           </tbody>
         </table>
+        <div className={style.paggDiv2}>
+          <form onSubmit={searchPerson}>
+            <input type="text" value={searchInput} onChange={inputHandler} />
+            <button type="submit">but</button>
+          </form>
+        </div>
         <ModalAddItem active={modalActive} setActive={setModalActive}>
           <p>
             На 2020.05.{modalData?.el} в России обнаружено: подтверждено -{" "}

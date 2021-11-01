@@ -1,9 +1,8 @@
 import React from "react";
 import style from "../Table/table.module.scss";
 
-function PersonRow({ user, setSortActive, sortActive }) {
+function PersonRow({ user }) {
   let arrayDaysUser = user?.Days?.map((el) => el);
-  console.log(user.Fullname)
   let hoursTimeUser = 0;
   let minuteTimeUser = 0;
 

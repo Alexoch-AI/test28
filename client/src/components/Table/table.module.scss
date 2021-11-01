@@ -25,6 +25,13 @@
   position: fixed;
 }
 
+.paggDiv2 {
+  margin-top: 10px;
+  margin-left: 50%;
+  position: fixed;
+  cursor: pointer;
+}
+
 table {
   position: relative;
   border-collapse: collapse;
@@ -75,4 +82,5 @@ thead th:first-child {
   top: 0;
   background: #000;
   color: #fff;
+  
 }
