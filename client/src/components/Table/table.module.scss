@@ -1,0 +1,78 @@
+.pagg {
+  margin: 5px;
+  padding: 5px;
+  cursor: pointer;
+  &__active {
+    font-weight: 700;
+    border-radius: 100%;
+    border: 2px solid black;
+    margin: 5px;
+    padding: 5px;
+    cursor: pointer;
+  }
+}
+
+.modd {
+  cursor: pointer;
+}
+
+.main {
+  text-align: center;
+}
+
+.paggDiv {
+  margin-top: 10px;
+  position: fixed;
+}
+
+table {
+  position: relative;
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid black;
+}
+
+table div {
+  max-width: 1500px;
+  max-height: 1500px;
+  overflow: scroll;
+  position: relative;
+}
+
+td,
+th {
+  padding: 0.25em;
+  border: 1px solid black;
+}
+
+thead th {
+  position: -webkit-sticky; /* for Safari */
+  position: sticky;
+  top: 0;
+  background: #000;
+  color: #fff;
+}
+
+thead th:first-child {
+  left: 0;
+  z-index: 1;
+}
+
+.leftColumn {
+  left: 0;
+  z-index: 1;
+  position: -webkit-sticky; /* for Safari */
+  position: sticky;
+  bottom: 0;
+  background: #000;
+  color: #fff;
+}
+.rightColumn {
+  right: 0;
+  z-index: 1;
+  position: -webkit-sticky; /* for Safari */
+  position: sticky;
+  top: 0;
+  background: #000;
+  color: #fff;
+}
